@@ -15,9 +15,9 @@ All the setups are done in RHEL6, but it should work for other Linux-based OS as
 
 ##Vim
 
-Different people have their own flavors about IDE. Vim is my preferred one. There are no good or bad between different choices, as long as you found it OK and happy to use. Here I pick vim for several reasons:
+Different people have their own flavors about IDE. Vim is my preferred one. There are no good or bad between different choices, as long as you find it OK and happy to use. Here I pick vim for several reasons:
 
-* Most of the time I program C++. To be honestly, no perfect IDE for C++ in the market now. Eclipse? too slow for big project. Clion? hmm… At least I didn’t see it support make. IDE your company brewed?  sorry I don’t know. 
+* Most of the time I program C++. To be honestly, no perfect IDE for C++ in the market now. Eclipse? too slow for big project. Clion? hmm… it's pretty cool though, but our project use native Makefile. IDE your company brewed?  sorry I don’t know. 
 
 * Reduce distraction. I find switching between keyboard and my touchpad is quite annoying, although they are already close enough on mac. This is my personal experience. When I use vim, I map ``esc`` to ``jj``(double enter j) for the same reason. Basically, I want to focus both my hands on the main keyboards and keep typing fast.
 
@@ -38,13 +38,13 @@ Following are the steps for vim setup:
         This package integrate clang-format into vim which makes code formatting just one simple hit.
 
     * [YouCompleteMe](http://valloric.github.io/YouCompleteMe/)(a.k.a ycm)(install by yourself)  
-        Ycm is pretty powerful for code autocomplete, but you have to compile it if you want its c-family language    completion(c/c++/obj-c). I have to say the compilation process is not easy, but worth a try. If you have any problems when compiling it, just leave a message. I am very happy to help.
+        Ycm is pretty powerful for code autocomplete, but you have to compile it if you want its c-family language    completion(c/c++/obj-c). I have to say the compilation process is not easy, but worth a try. If you have any problems when compiling it, just leave a message. I will be very happy to help.
 
 1. Last but not least, here are my personal vim learning experience. 
-    1. vimtutor. It hides in everyone’s terminal.
-    2. Play the game [vim advanture](http://vim-adventures.com/)
-    3. Print out vim cheat sheet and spend 5min to read it every morning. 
-    4. Read the book [Practical Vim](http://www.amazon.com/Practical-Vim-Thought-Pragmatic-Programmers/dp/1934356980) if have spare time and money.
+    1. vimtutor. It hides in everyone’s terminal. Simply enter ```vimtutor``` command.
+    2. Play the game [vim advanture](http://vim-adventures.com/). It is super fun and could help you get familiar with basic operations.
+    3. Print out vim cheat sheet and spend 5 min to read it every morning, at least the first 10 days. The most important keys are the one-character function keys. **You must memorize them!**
+    4. Read the book [Practical Vim](http://www.amazon.com/Practical-Vim-Thought-Pragmatic-Programmers/dp/1934356980) if you have spare time and money.
     5. Get start with vim Now!
  
 ##Screen
