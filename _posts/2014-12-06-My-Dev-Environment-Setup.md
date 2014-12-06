@@ -5,9 +5,12 @@ title:  My Dev Environmnet Setup
 
 A good dev environment is very important for developers. Here I will share the tools I use every day and the corresponding custom settings, including vim, several vim plugins, git and screen. 
 
+One image is worth a thousand words. Here is a screenshoot of my dev environment.
+![my-dev-screenshot]({{ site.baseurl }}/images/dev-screenshot.png)
+
+
 All the setups are done in RHEL6, but it should work for other Linux-based OS as well. 
 
-![my-dev-screenshot]({{ site.baseurl }}/images/dev-screenshot.png)
 ##Vim
 
 Different people have their own flavors about IDE. Vim is my preferred one. There are no good or bad between different choices, as long as you found it OK and happy to use. Here I pick vim for several reasons:
