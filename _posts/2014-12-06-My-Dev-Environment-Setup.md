@@ -32,13 +32,13 @@ Following are the steps for vim setup:
 1. Below are some packages i use most frequently:
 
     * [NERDtree](https://github.com/scrooloose/nerdtree)(included in spf13)
-    > NERDtree is the file explorer of vim. With NERDtree, you don't need to memorize all shortcuts for file operations.
+    NERDtree is the file explorer of vim. With NERDtree, you don't need to memorize all shortcuts for file operations.
 
     * [clang-format](https://github.com/rhysd/vim-clang-format)(install by yourself)
-    > This package integrate clang-format into vim which makes code formatting just one simple hit.
+    This package integrate clang-format into vim which makes code formatting just one simple hit.
 
     * [YouCompleteMe](http://valloric.github.io/YouCompleteMe/)(a.k.a ycm)(install by yourself)
-    > Ycm is pretty powerful for code autocomplete, but you have to compile it if you want its c-family language    completion(c/c++/obj-c). I have to say the compilation process is not easy, but worth a try. If you have any problems when compiling it, just leave a message. I am very happy to help.
+    Ycm is pretty powerful for code autocomplete, but you have to compile it if you want its c-family language    completion(c/c++/obj-c). I have to say the compilation process is not easy, but worth a try. If you have any problems when compiling it, just leave a message. I am very happy to help.
 
 1. Last but not least, here are my personal vim learning experience. 
     1. vimtutor. It hides in everyone’s terminal.
