@@ -5,8 +5,7 @@ title: Performance Profiling using Systemtap
 
 SystemTap (stap) is a scripting language and tool for profiling program on Linux kernel-based operation system. It could be used to probe both kernel and userland functions. You can find what it can do in the latest Linux performance tools graph:
 
-![alt text][logo]
-[logo]: http://www.brendangregg.com/Perf/linux_observability_tools.png
+![linux_observability_tools](http://www.brendangregg.com/Perf/linux_observability_tools.png)
 
 Stap supports c++ and c. For java, it may support it  from RHEL7 according to [this](http://developerblog.redhat.com/2014/01/10/probing-java-w-systemtap/). The key is the systemtap-runtime-java package, which I don’t see it in RHEL6 repo.
 
@@ -37,7 +36,7 @@ Although this repo is mainly for nginx performance tuning, there are also many f
 sample-bt could be used to generate in-CPU graph. This graph shows how your program consume CPU cycles from the perspective of functions. Follow the instruction [here](https://github.com/openresty/nginx-systemtap-toolkit#sample-bt). 
 
 For example, below graph is got from profiling redis server. From the graph, you can clearly see what redis is doing and which funciton consume the most cpu cycles. Some of the functions may not be optimizable, but most of the time you are able to find the bottomneck or some program fault. Click that function, you can follow the stacktrace further.
-
+    
 ```
 # example used to show systemtap use case
 # All the use cases use the same program and running paramaters.
@@ -52,8 +51,7 @@ For example, below graph is got from profiling redis server. From the graph, you
 **ATTENTION**: For C++ program, we need to unmangle the .bt file. Please run `cat [bt file] | c++filt -n > [output bt file]`
 
 
-![alt text][csfeed_oncpu]
-[csfeed_oncpu]: images/redis-on-cpu-get.svg
+![redis-on-cpu-get](/images/redis-on-cpu-get.svg)
 [Download the svg file and open it in your browser to see the interactive graph](https://github.com/qqibrow/qqibrow.github.io/blob/master/images/redis-on-cpu-get.svg)
 
 
@@ -64,8 +62,8 @@ sample-bt-off-cpu could be used to generate off-CPU graph, which shows all the b
 The Off-CPU flame graph is a pretty good startpoint for latency analysis. Personally I have a user case here. After a newest feature been pushed to production, we notice the latency went pretty high. Then we got the off-cpu flame graph of the app and find out one specific funtion consumed most of the time. Following that, we found out there is some wrong with our cache layer once under high traffic and finally fixed that. The off-cpu flame graph really helps us quickly target the root casue and also give us a clear picture whether the application is doing the right thing.
 
 Here is a flame graph of redis
-![alt text][redis_offcpu]
-[redis_offcpu]: images/redis-on-cpu-get.svg
+![redis-on-cpu-get](/images/redis-on-cpu-get.svg)
+[Download the svg file and open it in your browser to see the interactive graph](https://github.com/qqibrow/qqibrow.github.io/blob/master/images/redis-on-cpu-get.svg)
 
 FlameGraph is pretty powerful in performance tuning, since it could give you a overview of the program without any domain-specific knowledge. Need to mention that FlameGraph is independent of stap, you can definitely use other tools to generate flameGraph. Please check following links.
 
@@ -78,6 +76,7 @@ FlameGraph is pretty powerful in performance tuning, since it could give you a o
 stapxx is a macro language built on top of stap, which provide more functionalities and easier to use. For more detail, please review the main page. Here I mainly use the func-latency-distr script. The usage is very clear here.https://github.com/openresty/stapxx#func-latency-distr
 
 For example, below is a comparison I did using func-latency-distr.sxx to show how big the cross-colo latency is:
+    
 ```
 # the latency of lookupKeyRead function in redis codebase.
 sudo ./func-latency-distr.sxx -x 10995 --arg func='@pfunc(lookupKeyRead)'
