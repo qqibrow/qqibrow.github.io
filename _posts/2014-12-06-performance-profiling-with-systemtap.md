@@ -37,7 +37,7 @@ sample-bt could be used to generate in-CPU graph. This graph shows how your prog
 
 For example, below graph is got from profiling redis server. From the graph, you can clearly see what redis is doing and which funciton consume the most cpu cycles. Some of the functions may not be optimizable, but most of the time you are able to find the bottomneck or some program fault. Click that function, you can follow the stacktrace further.
     
-   ```
+```bash
 # example used to show systemtap use case
 # All the use cases use the same program and running paramaters.
 
@@ -46,7 +46,7 @@ For example, below graph is got from profiling redis server. From the graph, you
 ./redis-benchmark -r 10000000 -n 2000000 -t get -P 16 -q
 
 # For more details about redis-benchmark commands please refer to http://redis.io/topics/benchmarks.
-   ```
+```
 
 **ATTENTION**: For C++ program, we need to unmangle the .bt file. Please run `cat [bt file] | c++filt -n > [output bt file]`
 
