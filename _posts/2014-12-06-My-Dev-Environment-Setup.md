@@ -6,6 +6,8 @@ title:  My Dev Environmnet Setup
 A good dev environment is very important for developers. Here I will share the tools I use every day and the corresponding custom settings, including vim, several vim plugins, git and screen. 
 
 One image is worth a thousand words. Here is a screenshoot of my dev environment.
+    
+-> My Dev Screenshot <-
 ![my-dev-screenshot]({{ site.baseurl }}/images/dev-screenshot.png)
     
    
