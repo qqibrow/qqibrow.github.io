@@ -57,7 +57,7 @@ ATTENTION, if you use spf13-vim with screen, Please follow [this](http://stackov
 
 ##Bash Prompt
     
-    ![my-bash-prompt]({{ site.baseurl }}/images/my-bash-prompt.png)
+![my-bash-prompt]({{ site.baseurl }}/images/my-bash-prompt.png)
     
 Believe it or not, Two of The most frequently command I use are ```pwd``` and ```echo $?```, which doesn’t make any sense. Use bash prompt to change this situation. Please refer to [this](http://www.maketecheasier.com/8-useful-and-interesting-bash-prompts) and choose your best bash prompt. BTW, I use the 2nd one, which shows current path and change font color according to command return color.
 
