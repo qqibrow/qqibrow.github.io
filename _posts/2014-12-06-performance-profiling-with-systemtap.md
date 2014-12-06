@@ -14,12 +14,7 @@ Stap supports c++ and c. For java, it may support it  from RHEL7 according to [t
    grep CONFIG_UTRACE /boot/config-`uname -r` 
    ```
 * Install required kernel package, including kernel-debuginfo, kernel-debuginfo-common, kernel-devel (**Optional if you only use user-land probe**)
-```
-   sudo yum update -y --enablerepo="y-extras,y-contrib,y-updates"
-   sudo yum update -y --enablerepo="y-extras,y-contrib,y-updates" kernel-debuginfo
-   sudo yum install -y --enablerepo="y-extras,y-contrib,y-updates" kernel-debuginfo
-   sudo yum install -y --enablerepo="y-extras,y-contrib,y-updates" kernel-devel
-```
+
 * Install debug info for program ls, which we will use as a test.
 `` debuginfo-install `rpm -qf /bin/ls` ``
 * Test whether the installation works and user-land probe is enabled. If succeed, it should print out a line "hello world!"
@@ -38,19 +33,36 @@ Although this repo is mainly for nginx performance tuning, there are also many f
 
 sample-bt could be used to generate in-CPU graph. This graph shows how your program consume CPU cycles from the perspective of functions. Follow the instruction [here](https://github.com/openresty/nginx-systemtap-toolkit#sample-bt). 
 
-For example, below graph is got from profiling csfeed daemon. From the graph, you can clearly see that it cost most of CPY on the function. `parseCTF`. Click that function, you can follow the stacktrace further to find bottomnecks.
+For example, below graph is got from profiling redis server. From the graph, you can clearly see what redis is doing and which funciton consume the most cpu cycles. Some of the functions may not be optimizable, but most of the time you are able to find the bottomneck or some program fault. Click that function, you can follow the stacktrace further.
+
+```
+# example used to show systemtap use case
+# All the use cases use the same program and running paramaters.
+
+# redis-server opens in localhost
+# redis-benchmark runs like: 
+./redis-benchmark -r 10000000 -n 2000000 -t get -P 16 -q
+
+# For more details about redis-benchmark commands please refer to http://redis.io/topics/benchmarks.
+```
 
 **ATTENTION**: For C++ program, we need to unmangle the .bt file. Please run `cat [bt file] | c++filt -n > [output bt file]`
 
+
 ![alt text][csfeed_oncpu]
-[csfeed_oncpu]: http://effectaffect.corp.ne1.yahoo.com/share/csfeed_d1_oncpu.svg
-[Click the link to show interactive graph](http://effectaffect.corp.ne1.yahoo.com/share/csfeed_d1_oncpu.svg)
+[csfeed_oncpu]: images/redis-on-cpu-get.svg
+[Download the svg file and open it in your browser to see the interactive graph](https://github.com/qqibrow/qqibrow.github.io/blob/master/images/redis-on-cpu-get.svg)
 
 
 * **Off-CPU Flame Graph**
 
 sample-bt-off-cpu could be used to generate off-CPU graph, which shows all the blocking(or latency) come from. Then running process is exactly the same with sample-bt.
 
+The Off-CPU flame graph is a pretty good startpoint for latency analysis. Personally I have a user case here. After a newest feature been pushed to production, we notice the latency went pretty high. Then we got the off-cpu flame graph of the app and find out one specific funtion consumed most of the time. Following that, we found out there is some wrong with our cache layer once under high traffic and finally fixed that. The off-cpu flame graph really helps us quickly target the root casue and also give us a clear picture whether the application is doing the right thing.
+
+Here is a flame graph of redis
+![alt text][redis_offcpu]
+[redis_offcpu]: images/redis-on-cpu-get.svg
 
 FlameGraph is pretty powerful in performance tuning, since it could give you a overview of the program without any domain-specific knowledge. Need to mention that FlameGraph is independent of stap, you can definitely use other tools to generate flameGraph. Please check following links.
 
@@ -64,37 +76,25 @@ stapxx is a macro language built on top of stap, which provide more functionalit
 
 For example, below is a comparison I did using func-latency-distr.sxx to show how big the cross-colo latency is:
 ```
-# function call latency result of csfeed1.bf1 connecting to db1.bf1
+# the latency of lookupKeyRead function in redis codebase.
+sudo ./func-latency-distr.sxx -x 10995 --arg func='@pfunc(lookupKeyRead)'
 
-Start tracing 17531 (/home/y/libexec64/quotefeed/quotefeed)
-Please wait for 30 seconds...
-Distribution of _ZN7finance9symbology9quotefeed13SymbolMessage7GetYFIDEPSs latencies (in nanoseconds) for 2657 samples
-max/avg/min: 20716903/11012404/5844073
-   value |-------------------------------------------------- count
- 1048576 |                                                      0
- 2097152 |                                                      0
- 4194304 |                                                     32
- 8388608 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  2621
-16777216 |                                                      4
-33554432 |                                                      0
-67108864 |                                                      0
+Start tracing 10995 (/home/lniu/redis-2.8.13/src/redis-server)
+Hit Ctrl-C to end.
+^CDistribution of lookupKeyRead latencies (in nanoseconds) for 1859762 samples
+max/avg/min: 248455/6884/5955
+ value |-------------------------------------------------- count
+  1024 |                                                         0
+  2048 |                                                         0
+  4096 |@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@  1764146
+  8192 |@@                                                   80367
+ 16384 |                                                     14996
+ 32768 |                                                       228
+ 65536 |                                                        22
+131072 |                                                         3
+262144 |                                                         0
+524288 |                                                         0
 
-# latency of the same function call of csfeed1.ne1 connecting to db1.bf1
-
-Start tracing 14732 (/home/y/libexec64/quotefeed/quotefeed)
-Please wait for 30 seconds...
-Distribution of _ZN7finance9symbology9quotefeed13SymbolMessage7GetYFIDEPSs latencies (in nanoseconds) for 27 samples
-max/avg/min: 1486334834/1079656591/515740032
-     value |-------------------------------------------------- count
-  67108864 |                                                    0
- 134217728 |                                                    0
- 268435456 |@                                                   1
- 536870912 |@@@@                                                4
-1073741824 |@@@@@@@@@@@@@@@@@@@@@@                             22
-2147483648 |                                                    0
-4294967296 |    
 ```
-You can see clearly that cross-colo latency is almost 1000 times bigger than inner-colo latency.
 
-
-For more questions, please contact lniu@yahoo-inc.com. And welcome to add more details. 
+Please leave a message if you have any questions. I am glad to help :)
