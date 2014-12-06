@@ -7,7 +7,8 @@ A good dev environment is very important for developers. Here I will share the t
 
 One image is worth a thousand words. Here is a screenshoot of my dev environment.
 ![my-dev-screenshot]({{ site.baseurl }}/images/dev-screenshot.png)
-
+    
+   
 
 All the setups are done in RHEL6, but it should work for other Linux-based OS as well. 
 
