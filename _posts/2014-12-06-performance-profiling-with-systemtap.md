@@ -1,13 +1,13 @@
 ---
 layout: post
-title: Performance Profiling using Systemtap
+title: Program Profiling Using Systemtap
 ---
 
-SystemTap (stap) is a scripting language and tool for profiling program on Linux kernel-based operation system. It could be used to probe both kernel and userland functions. You can find what it can do in the latest Linux performance tools graph:
+SystemTap (stap) is both scripting language and tool for profiling program on Linux kernel-based operation system. The most important feature is its ability to probe user-land function, different from tools like [strace](http://linux.die.net/man/1/strace) and [perf](http://en.wikipedia.org/wiki/Perf_%28Linux%29) which can only or partly support user-land probing. You can find what it can do in the latest Linux performance tools graph:
 
 ![linux_observability_tools](http://www.brendangregg.com/Perf/linux_observability_tools.png)
 
-Stap supports c++ and c. For java, it may support it  from RHEL7 according to [this](http://developerblog.redhat.com/2014/01/10/probing-java-w-systemtap/). The key is the systemtap-runtime-java package, which I don’t see it in RHEL6 repo.
+Stap supports c++ and c. For java, it may support it  from RHEL7 according to [this](http://developerblog.redhat.com/2014/01/10/probing-java-w-systemtap/). The key is the systemtap-runtime-java package, which I don’t see it in RHEL6 repo.(Yeah, I use RHEL6.)
 
 ##Install Guide
 
@@ -20,9 +20,10 @@ Stap supports c++ and c. For java, it may support it  from RHEL7 according to [t
 * Install debug info for program ls, which we will use as a test.
 `` debuginfo-install `rpm -qf /bin/ls` ``
 * Test whether the installation works and user-land probe is enabled. If succeed, it should print out a line "hello world!"
-```
+{% highlight bash %}
 sudo stap -e 'probe process("ls").function("main") { printf("hello world!\n"); }' -c ls
-```
+{% endhighlight %}
+    
 ##Usage Guide
 
 You don’t need to learn stap language very well to use it. There are many good resources on Github. I mainly use scripts from [agentzh](https://github.com/agentzh), who is pretty active on performance tuning using stap. Blow are his two repositories I use:
