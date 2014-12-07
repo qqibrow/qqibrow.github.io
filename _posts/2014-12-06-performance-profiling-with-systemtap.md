@@ -37,7 +37,7 @@ sample-bt could be used to generate in-CPU graph. This graph shows how your prog
 
 For example, below graph is got from profiling redis server. From the graph, you can clearly see what redis is doing and which funciton consume the most cpu cycles. Some of the functions may not be optimizable, but most of the time you are able to find the bottomneck or some program fault. Click that function, you can follow the stacktrace further.
     
-```bash
+{% highlight bash %}
 # example used to show systemtap use case
 # All the use cases use the same program and running paramaters.
 
@@ -46,7 +46,7 @@ For example, below graph is got from profiling redis server. From the graph, you
 ./redis-benchmark -r 10000000 -n 2000000 -t get -P 16 -q
 
 # For more details about redis-benchmark commands please refer to http://redis.io/topics/benchmarks.
-```
+{% endhighlight %}
 
 **ATTENTION**: For C++ program, we need to unmangle the .bt file. Please run `cat [bt file] | c++filt -n > [output bt file]`
 
@@ -77,7 +77,7 @@ stapxx is a macro language built on top of stap, which provide more functionalit
 
 For example, below is a comparison I did using func-latency-distr.sxx to show how big the cross-colo latency is:
     
-```
+{% highlight bash %}
 # the latency of lookupKeyRead function in redis codebase.
 sudo ./func-latency-distr.sxx -x 10995 --arg func='@pfunc(lookupKeyRead)'
 
@@ -97,6 +97,6 @@ max/avg/min: 248455/6884/5955
 262144 |                                                         0
 524288 |                                                         0
 
-```
+{% endhighlight %}
 
 Please leave a message if you have any questions. I am glad to help :)
