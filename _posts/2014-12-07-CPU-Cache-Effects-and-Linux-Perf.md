@@ -3,13 +3,13 @@ layout: post
 title: CPU Cache Effects and Linux Perf
 ---
 
-CPU cache is a small and fast memory unit that CPU access. Understanding how it works and how to use it is crucial for high performance programming. 
+CPU cache is a small and fast memory unit that CPU accesses. Understanding how it works and how to use it is crucial for high performance programming. 
 
-One good startpoint to learn CPU cache is ["gallery of processor cache effects”](http://igoro.com/archive/gallery-of-processor-cache-effects/) from Igor Ostrovsky, in which some code samples and analysis graph are used to show how CPU cache could affect the program. There is a Chinese translation version of it from the famous coolshell. After reading it, you will have a clear picture how it works and could answer most of relative interview questions correctly :)
+One good startpoint to learn CPU cache is ["gallery of processor cache effects”](http://igoro.com/archive/gallery-of-processor-cache-effects/) from Igor Ostrovsky, in which some code samples and analysis graph are used to show how CPU cache could affect the program. There is a Chinese translation version of it from the famous [coolshell](http://coolshell.cn/). After reading it, you will have a clear picture how it works and could answer most of the interview questions correctly :)
 
-Since I am studying system performance analysis recently, I think it’s best that I could get metrics about CPU cache and show some comparison results. Perf is the best tool to do this. 
+Since I am studying system performance analysis recently, I think it’s better that I could get metrics about CPU cache and show some comparison results. Perf is the best tool to do this. 
 
-[Perf](http://en.wikipedia.org/wiki/Perf_%28Linux%29) is a performance analyzing tool in Linux which collect both kernel and userspace events and provide some nice metrics. It’s been widely used in my team to find bottomneck of CPU-bound applications. 
+[Perf](http://en.wikipedia.org/wiki/Perf_%28Linux%29) is a performance analyzing tool in Linux which collects both kernel and userspace events and provide some nice metrics. It’s been widely used in my team to find bottomneck in CPU-bound applications. 
 
 Let’s see how to use perf to show CPU cache effects. Below is a simple program which modified based on Example 6 from [Igor’s post](http://igoro.com/archive/gallery-of-processor-cache-effects/).
 
@@ -65,7 +65,8 @@ Time eclipse 324802703 ns
 perf stat -d ./cache_line_test 16 32 48 64
 Time eclipse 195028694 ns
 {% endhighlight %}
-Woo, The result shows that visiting 4 continuous elements is almost 1 second slower than visiting 4 far-away elements. If you read the post above, you will understand the reason is that in the first case elements on the same cache line are operated constantly, causing false sharing and therefore degrade the performance. It’s the same as visiting resources protected by a global lock, according to [Herb Sutter’s great explanation](http://www.drdobbs.com/parallel/maximize-locality-minimize-contention/208200273?pgno=1)
+
+Woo, The result shows that visiting 4 continuous elements is more than 1 second slower than visiting 4 far-away elements. If you read the post above, you will understand the reason is that in the first case elements on the same cache line are operated constantly, causing false sharing and therefore degrade the performance. It’s the same as visiting resources protected by a global lock, according to [Herb Sutter’s great explanation](http://www.drdobbs.com/parallel/maximize-locality-minimize-contention/208200273?pgno=1)
 
 Well, Let’s use perf to see what really happened. Here we use ``perf stat`` command. 
 
@@ -151,30 +152,10 @@ int main(int argc, char const* argv[]) {
 }
 {% endhighlight %}
 
-program may load x and y together into CPU since they may in the same cache line. However, two separate threads will constantly visit x and y, causing contention issues. If you manually specify additional padding for both variables in the code, you can avoid this false sharing effect, which shows clear in the perf stat reports.
+Above program may load x and y together into CPU since they may in the same cache line. However, two separate threads will constantly visit x and y, causing contention issues. If you manually specify additional padding for both variables in the code, you can avoid this false sharing effect, which shows clear in the perf stat reports.
 
 {% highlight bash %}
-Time eclipse 137767393
-Performance counter stats for './cache_line_test2':
-
-        236.315031 task-clock   # 1.684 CPUs utilized
-        27 context-switches     # 0.114 K/sec
-        3 cpu-migrations        # 0.013 K/sec
-        361 page-faults         # 0.002 M/sec
-        498,424,764 cycles      # 2.109 GHz [42.32%]
-        326,001,170 stalled-cycles-frontend # 65.41% frontend cycles idle [44.44%]
-        104,706,411 stalled-cycles-backend  # 21.01% backend cycles idle [46.42%]
-        387,431,049 instructions            # 0.78 insns per cycle
-                                            # 0.84 stalled cycles per insn [56.90%]
-        66,160,017 branches                 # 279.965 M/sec [57.73%]
-        9,012 branch-misses                 # 0.01% of all branches [54.35%]
-        277,850,622 L1-dcache-loads         # 1175.764 M/sec [50.99%]
-        20,624 L1-dcache-load-misses        # 0.01% of all L1-dcache hits [47.61%]
-        2,911 LLC-loads                     # 0.012 M/sec [34.05%]
-        645 LLC-load-misses                 # 22.16% of all LL-cache hits [40.02%]
-
-0.140328188 seconds time elapsed
-
+# With out cache line padding
 Time eclipse 148839896
 Performance counter stats for './cache_line_test2':
 
@@ -195,6 +176,28 @@ Performance counter stats for './cache_line_test2':
         938 LLC-load-misses                 # 0.04% of all LL-cache hits [34.65%]
 
 0.151364416 seconds time elapsed
+
+# With cache line padding
+Time eclipse 137767393
+Performance counter stats for './cache_line_test2':
+
+        236.315031 task-clock   # 1.684 CPUs utilized
+        27 context-switches     # 0.114 K/sec
+        3 cpu-migrations        # 0.013 K/sec
+        361 page-faults         # 0.002 M/sec
+        498,424,764 cycles      # 2.109 GHz [42.32%]
+        326,001,170 stalled-cycles-frontend # 65.41% frontend cycles idle [44.44%]
+        104,706,411 stalled-cycles-backend  # 21.01% backend cycles idle [46.42%]
+        387,431,049 instructions            # 0.78 insns per cycle
+                                            # 0.84 stalled cycles per insn [56.90%]
+        66,160,017 branches                 # 279.965 M/sec [57.73%]
+        9,012 branch-misses                 # 0.01% of all branches [54.35%]
+        277,850,622 L1-dcache-loads         # 1175.764 M/sec [50.99%]
+        20,624 L1-dcache-load-misses        # 0.01% of all L1-dcache hits [47.61%]
+        2,911 LLC-loads                     # 0.012 M/sec [34.05%]
+        645 LLC-load-misses                 # 22.16% of all LL-cache hits [40.02%]
+
+0.140328188 seconds time elapsed
 {% endhighlight %}
 
 In summary, understanding how CPU cache works is pretty helpful to write high performance C++ code. At the same time, perf stat could help us to verify our cache line padding techniques does work.  You can find all the sample code [here](https://github.com/qqibrow/PerfTest/tree/master/CacheTest). And for more details about perf, please refer to [Brendan Gregg’s awesome post about perf](http://www.brendangregg.com/perf.html).
