@@ -76,21 +76,21 @@ Time eclipsed 324802703
 
  Performance counter stats for './cache_line_test 0 1 2 3':
 
-    1288.050638 task-clock                #    3.930 CPUs utilized
-            185 context-switches          #    0.144 K/sec
-              8 cpu-migrations            #    0.006 K/sec
-            395 page-faults               #    0.307 K/sec
-  3,182,411,312 cycles                    #    2.471 GHz                     [39.95%]
-  2,720,300,251 stalled-cycles-frontend   #   85.48% frontend cycles idle    [40.28%]
-    764,587,902 stalled-cycles-backend    #   24.03% backend  cycles idle    [40.43%]
-  1,040,828,706 instructions              #    0.33  insns per cycle
-                                          #    2.61  stalled cycles per insn [51.33%]
-    130,948,681 branches                  #  101.664 M/sec                   [51.48%]
-         20,721 branch-misses             #    0.02% of all branches         [50.65%]
-    652,263,290 L1-dcache-loads           #  506.396 M/sec                   [51.24%]
-     10,055,747 L1-dcache-load-misses     #    1.54% of all L1-dcache hits   [51.24%]
-      4,846,815 LLC-loads                 #    3.763 M/sec                   [40.18%]
-            301 LLC-load-misses           #    0.01% of all LL-cache hits    [39.58%]
+1288.050638 task-clock                #    3.930 CPUs utilized
+        185 context-switches          #    0.144 K/sec
+          8 cpu-migrations            #    0.006 K/sec
+        395 page-faults               #    0.307 K/sec
+3,182,411,312 cycles                    #    2.471 GHz                     [39.95%]
+2,720,300,251 stalled-cycles-frontend   #   85.48% frontend cycles idle    [40.28%]
+764,587,902 stalled-cycles-backend    #   24.03% backend  cycles idle    [40.43%]
+1,040,828,706 instructions              #    0.33  insns per cycle
+                                      #    2.61  stalled cycles per insn [51.33%]
+130,948,681 branches                  #  101.664 M/sec                   [51.48%]
+     20,721 branch-misses             #    0.02% of all branches         [50.65%]
+652,263,290 L1-dcache-loads           #  506.396 M/sec                   [51.24%]
+ 10,055,747 L1-dcache-load-misses     #    1.54% of all L1-dcache hits   [51.24%]
+  4,846,815 LLC-loads                 #    3.763 M/sec                   [40.18%]
+        301 LLC-load-misses           #    0.01% of all LL-cache hits    [39.58%]
 
 0.327715621 seconds time elapsed
 
@@ -100,21 +100,21 @@ Time eclipse 195028694
 
  Performance counter stats for './cache_line_test 16 32 48 64':
 
-    744.442001 task-clock                #    3.761 CPUs utilized
-           112 context-switches          #    0.150 K/sec
-             7 cpu-migrations            #    0.009 K/sec
-           395 page-faults               #    0.531 K/sec
- 1,714,456,744 cycles                    #    2.303 GHz                     [38.96%]
- 1,274,421,957 stalled-cycles-frontend   #   74.33% frontend cycles idle    [41.60%]
-    76,097,831 stalled-cycles-backend    #    4.44% backend  cycles idle    [44.15%]
-   987,253,691 instructions              #    0.58  insns per cycle
-                                         #    1.29  stalled cycles per insn [54.34%]
-   126,220,377 branches                  #  169.550 M/sec                   [55.34%]
-        13,691 branch-misses             #    0.01% of all branches         [54.22%]
-   677,471,016 L1-dcache-loads           #  910.039 M/sec                   [52.62%]
-        36,992 L1-dcache-load-misses     #    0.01% of all L1-dcache hits   [50.51%]
-         7,896 LLC-loads                 #    0.011 M/sec                   [37.75%]
-           503 LLC-load-misses           #    6.37% of all LL-cache hits    [35.60%]
+744.442001 task-clock                #    3.761 CPUs utilized
+       112 context-switches          #    0.150 K/sec
+         7 cpu-migrations            #    0.009 K/sec
+       395 page-faults               #    0.531 K/sec
+1,714,456,744 cycles                    #    2.303 GHz                     [38.96%]
+1,274,421,957 stalled-cycles-frontend   #   74.33% frontend cycles idle    [41.60%]
+76,097,831 stalled-cycles-backend    #    4.44% backend  cycles idle    [44.15%]
+987,253,691 instructions              #    0.58  insns per cycle
+                                     #    1.29  stalled cycles per insn [54.34%]
+126,220,377 branches                  #  169.550 M/sec                   [55.34%]
+    13,691 branch-misses             #    0.01% of all branches         [54.22%]
+677,471,016 L1-dcache-loads           #  910.039 M/sec                   [52.62%]
+    36,992 L1-dcache-load-misses     #    0.01% of all L1-dcache hits   [50.51%]
+     7,896 LLC-loads                 #    0.011 M/sec                   [37.75%]
+       503 LLC-load-misses           #    6.37% of all LL-cache hits    [35.60%]
 
 0.197919841 seconds time elapsed
 {% endhighlight %}
