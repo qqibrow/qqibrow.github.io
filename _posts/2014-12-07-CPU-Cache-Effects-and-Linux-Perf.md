@@ -55,7 +55,7 @@ int main(int argc, char * argv[])
 
     auto t1 = high_resolution_clock::now();
     nanoseconds total_nanoseconds = std::chrono::duration_cast<nanoseconds>(t1 - t0);
-    printf("Time exlipse %ld\n", total_nanoseconds.count());
+    printf("Time eclipsed %ld ns.\n", total_nanoseconds.count());
     delete[] arr;
     return 0;
 }
@@ -127,7 +127,33 @@ It’s pretty clear, isn’t it? You can see actually the second program reduce 
 Here is another simple program to show the performance gain using cache line padding technique. 
 
 {% highlight C++ %}
+#include <iostream>
+#include <thread>
+#include <chrono>
 
+using namespace std::chrono;
+using namespace std;
+
+#define MAX (1024 * 1024 * 32)
+int main(int argc, char const* argv[]) {
+    int x = 0;
+    int y = 0;
+    auto t0 = high_resolution_clock::now();
+    std::thread th([&x]() {
+        for (int i = 0; i < MAX; ++i) {
+            ++x;
+        }
+    });
+    for (int i = 0; i < MAX; ++i) {
+        ++y;
+    }
+
+    th.join();
+    auto t1 = high_resolution_clock::now();
+    nanoseconds total_nanoseconds = std::chrono::duration_cast<nanoseconds>(t1 - t0);
+    printf("Time eclipsed %ld ns.\n", total_nanoseconds.count());
+    return 0;
+}
 
 
 {% endhighlight %}
@@ -138,7 +164,7 @@ program may load x and y together into CPU since they may in the same cache line
 Time exlipse 137767393
 
 Performance counter stats for './cache_line_test2':
-
+{% highlight bash %}
 236.315031 task-clock # 1.684 CPUs utilized
 27 context-switches # 0.114 K/sec
 3 cpu-migrations # 0.013 K/sec
@@ -178,5 +204,6 @@ Performance counter stats for './cache_line_test2':
 938 LLC-load-misses # 0.04% of all LL-cache hits [34.65%]
 
 0.151364416 seconds time elapsed
+{% endhighlight %}
 
-In summary, understanding how CPU cache works is pretty helpful to write high performance C++ code. At the same time, perf stat could help us to verify our cache line padding techniques does work.  You can find all the sample code here. And for more details about perf, please refer to brendangregg’s awesome post.
+In summary, understanding how CPU cache works is pretty helpful to write high performance C++ code. At the same time, perf stat could help us to verify our cache line padding techniques does work.  You can find all the sample code [here](https://github.com/qqibrow/PerfTest/tree/master/CacheTest). And for more details about perf, please refer to [Brendan Gregg’s awesome post about perf](http://www.brendangregg.com/perf.html).
