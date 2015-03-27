@@ -23,11 +23,11 @@ footer-links:
   flickr: 
   github: github.com/qqibrow
   instagram: 
-  linkedin: 
+  linkedin: https://www.linkedin.com/pub/lu-niu/56/3b5/4a9
   pinterest: 
   rss: # just type anything here for a working RSS icon, make sure you set the "url" above!
-  twitter: jekyllrb
-  stackoverflow: # your stackoverflow profile, e.g. "users/50476/bart-kiers"
+  twitter: 
+  stackoverflow: users/1646996/qqibrow # your stackoverflow profile, e.g. "users/50476/bart-kiers"
 
 # Your disqus shortname, entering this will enable commenting on posts
 disqus: qqibrowgithubio
