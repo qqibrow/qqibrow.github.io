@@ -9,8 +9,7 @@ focusing on distribute system development and performance tuning.
 
 ### More Information
 
-* C++ programmer. 
-* Love beautiful design and clean code
+Try, Investigate, Improve, Share, Automate
 
 ### Contact me
 
