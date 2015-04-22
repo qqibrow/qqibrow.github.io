@@ -7,4 +7,4 @@ title: Adventure with Tcpcopy
 
 I am using the [new architecture](https://github.com/session-replay-tools/tcpcopy) (version v1.0.0) introduced in the main page. I borrow the architecture graph here and made some notation by myself
 
-![my-dev-screenshot]({{ site.baseurl }}/images/tcpcopy-anotation.gif)
+![my-dev-screenshot]({{ site.baseurl }}/images/tcpcopy_anotation.gif)
