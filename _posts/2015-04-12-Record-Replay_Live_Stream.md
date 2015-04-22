@@ -1,3 +1,7 @@
+---
+layout: post
+title: Record Replay Live Stream
+---
 Recording live steam data is useful from several aspects:
 
 1. Debug exceptions when using external api. Most of the time we redo the same call several times to debug. Instead, u could record once and analysis the underlying data.
