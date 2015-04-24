@@ -3,8 +3,10 @@ layout: post
 title: Adventure with Tcpcopy
 ---
 
+## Introduction
 [Tcpcopy](https://github.com/session-replay-tools/tcpcopy) is a request replication tool which could be very useful in A/B testing and performance testing. It is able to replicate live traffic in production with little overhead and direct the traffic to testing modules. In this way, we could easily replicate a live production environment and catch critical problems before launching new product.
 
+## Architecture
 I am using the [new architecture](https://github.com/session-replay-tools/tcpcopy) (version v1.0.0) introduced in the main page. I borrow the architecture graph here and made some notation by myself.
 
 * Online server: the application in production.
@@ -23,7 +25,7 @@ I am using the [new architecture](https://github.com/session-replay-tools/tcpcop
 8. as 7
 9. as 7
 
-## Test Start
+## Deploy and Test
 
 Here we play tcpcopy together with redis. The goal is to replicate redis requests from online server to target server. Before get started, both tcpcopy and intercept program have been deployed to online server and assistant server separately. Both are compiled with `./configure && make && make install`
 
@@ -75,9 +77,9 @@ OK
 1429739009.883228 [0 10.90.114.82:60931] “set” “date” “04-22-2015”
 {% endhighlight %}
 
-From the redis log, u can see there is ~3 miliseconds delay of the request to target server and client ip address of both requests is 10.90.114.82.
+From the redis log, u can see there is ~3 miliseconds delay of the request to target server and client ip address of both requests is 10.90.114.82. The response from target server will not reach the client because when it will be blocked when it arrives the assistant server. That’s why we have to add the routing settting.
 
-# A Deep Analysis using tcpdump
+# Analysis using Tcpdump
 We do the same test one more time and use tcpdump to capture packets with port 6379 (redis default port) in every server involved.
 {% highlight bash %}
 #client server
@@ -123,8 +125,44 @@ OK
         0x0020:  8018 0072 1ecd 0000 0101 080a 04b0 9b6d  ...r...........m
         0x0030:  49ce fbaf 2b4f 4b0d 0a                   I...+OK..
 {% endhighlight %}
+You can clearly see there is one additional request forged on online server and it reached the redis application on the target server. Then, a response is generated and arrived assistant server because of the router setting we added. Finally, that request is discarded there from intercept program.
 
+## Enlarge testing traffic
+One great feature of tcpcopy is that it could enlarge the traffic as you want. The only think you need to change is run tcpcopy with `-n` arguments.
+{% highlight bash %}
+#client server
+./redis-cli -h 10.90.111.142 set date $(date +”%m-%d-%Y”)
+OK
+# online server
+./redis-cli monitor
+OK
+1429852265.209466 [0 10.90.114.82:37081] “set” “date” “04-24-2015”
+# target server
+./redis-cli monitor
+OK
+1429852268.543995 [0 10.90.114.82:37646] “set” “date” “04-24-2015”
+1429852268.544035 [0 10.90.114.82:37081] “set” “date” “04-24-2015”
+1429852268.544055 [0 10.90.114.82:37582] “set” “date” “04-24-2015”
+{% endhighlight %}
 
+Here u can see there requests get to target server, but with different port number. Looks like tcpcopy faked the port number in the additional requests. That’s why the man page suggest not to replicate workload over certain times because requests with same port number might be generated under large workload:
+
+{% highlight bash %}
+-n <num>       use <num> to set the replication times when you want to get a
+               copied data stream that is several times as large as the online data.
+               The maximum value allowed is 1023. As multiple copying is based on
+               port number modification, the ports may conflict with each other,
+               in particular in intranet applications where there are few source IPs
+               and most connections are short. Thus, tcpcopy would perform better
+               when less copies are specified. For example,
+               ‘./tcpcopy -x 80-192.168.0.2:8080 -n 3’ would copy data flows from
+               port 80 on the current server, generate data stream that is three
+               times as large as the source data, and send these requests to the
+               target port 8080 on ‘192.168.0.2’.
+{% endhighlight %}
+
+## Offline testing (TODO)
+  
 
 
 
