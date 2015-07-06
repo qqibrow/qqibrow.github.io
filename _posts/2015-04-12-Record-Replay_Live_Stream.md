@@ -21,10 +21,10 @@ In my work, we subscribed live data through external connections. Testing is a p
 2. Authentication has to be faked and it's not as simple as "enter your username and password".
 3. data comes from multiple source, which means we might repeat 1,2 multiple times.
 
-We want to accomplish this with the least change of the current system and that's when [socat](http://www.dest-unreach.org/socat/) jumps out.
+We want to accomplish this with the least change of the current system and that's when [socat](http://www.dest-unreach.org/socat/) stands out.
 
 ## Socat
-`socat` is short for `socket concatenate` and its function is very similar with `cat`. In cat, `cat file1 file2 file3` will concatenate all files and output to STDOUT, as its name suggests. `socat` could accomplish similar things with sockets. Here is a simple echo server using socat. For each request, it will echo the complete HTTP request back.
+socat is short for "socket concatenate" and its function is very similar with [cat](http://unixhelp.ed.ac.uk/CGI/man-cgi?cat). In cat, `cat file1 file2 file3` will concatenate all files and output to STDOUT. `socat` could accomplish similar things with sockets. Here is a simple echo server using socat. For each request, it will echo the complete HTTP request back.
 
 {% highlight bash %}
 socat TCP-LISTEN:8080,fork exec:'cat' &
@@ -42,7 +42,7 @@ Cookie: blablabla
 This command will open a listening port on localhost:8080 and wait for connections. Once it got a connection it will execute the `cat` command and pipe what it received through the tcp connection to it. So actually the whole thing looks like `echo blablabla | cat` more or less, but in a more fancy way.
 
 ## Demo
-More interesting thing comes in following demo. There is a [redis](http://redis.io/) running on localhost:6379. first some background, set and get command:
+More interesting thing comes in following demo. There is a [redis](http://redis.io/) running on localhost:6379. First some background, set and get command:
 {% highlight bash %}
 ./redis-cli -h localhost -p 7777 set Foo "hello"
 OK
@@ -50,7 +50,7 @@ OK
 "hello"
 {% endhighlight %}
 
-Then we do:
+Next we do:
 {% highlight bash %}
 # setup a socat server to record everything
 socat TCP-LISTEN:7022 SYSTEM:'tee message_sent | socat - "TCP4:localhost:7777" | tee message_received' &
@@ -58,7 +58,7 @@ socat TCP-LISTEN:7022 SYSTEM:'tee message_sent | socat - "TCP4:localhost:7777" |
 ./redis-cli -h localhost -p 7022 set Foo "hello"
 {% endhighlight %}
 
-The exactly same result "hello" is returned and we got two files message_received and message_sent. As the name suggested, the message_sent file is what was sent to redis server and message_received is what was received.
+The exactly same result "hello" returns and we got two files `message_received` and `message_sent`. As the name suggested, the `message_sent` file is what was sent to redis server and `message_received` is what was received.
 It's a long command but the whole idea is the same as before. we use two socat command here so that we could explicitly get the stream in either direction. Then we use `tee` command to pipe both streams to local files.
 
 Open message_sent file:
@@ -119,6 +119,4 @@ we open another redis client and run monior `redis_cli -h hostname -p 7777 monit
 {% endhighlight %}
 
 Therefore, redis did get commands from the replaying and did exactly the same thing as before.
-
-
 
