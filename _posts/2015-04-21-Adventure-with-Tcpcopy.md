@@ -160,13 +160,3 @@ Here u can see there requests get to target server, but with different port numb
                times as large as the source data, and send these requests to the
                target port 8080 on ‘192.168.0.2’.
 {% endhighlight %}
-
-## Offline testing (TODO)
-  
-
-
-
-
-
-
-
