@@ -47,4 +47,4 @@ One importatn thing to know is strace will significantly slow down the performan
 
 ## Final words
 Tracing is very interesting and a lot of fun. I introduced perf and systemtap before, which are also powerful tracking tools. I feel with learning of different tracking tools, I could gradually understand performance better, understand programming better and even understand kernel better. With the comming of Linux 4.0, more and more tracing tools and apis will be available. Well, more to learn and long way to the top!
-![it's a long way to the top by AC DC](http://www.acdccollector.com/itsalongwayukdvd1.jpg)
+[![it's a long way to the top by AC DC](http://ak-hdl.buzzfed.com/static/2014-05/enhanced/webdr02/23/1/grid-cell-8638-1400823901-3.jpg)](https://www.youtube.com/watch?v=-sUXMzkh-jI)
