@@ -21,15 +21,18 @@ sshd -D
 However, it's hard to to live tracking the process in this way. Then my Linux guru friend suggested me to give a shot with `strace`. I used strace before to do error debugging and code analysis, but to be honestly, I didn't think about it in this problem. The truth is, `strace` provides a very elegant one-liner solution:
 {% highlight bash %}
 strace -eexecve -s 200 -o output -f make
+simple output:
+1370 execve("/bin/mkdir", ["mkdir", "-p", "x86_64-linux-gcc"], [/* 63 vars */]) = 0
+1269 execve("/usr/bin/ld", ["/usr/bin/ld", "--eh-frame-hdr", "--build-id", "-m", "elf_x86_64", "--hash-style=gnu", "-dynamic-linker", "/lib64/ld-linux-x86-64.so.2", "-o", "x86_64-linux-gcc/quotefeed",  "/usr/lib/gcc/x86_64-redhat-linux/4.4.7/../../../../lib64/crti.o", "/usr/lib/gcc/x86_64-redhat-linux/4.4.7/crtbegin.o", "-L/usr/lib64” /* omit more words by mylsef*/], [/* 69 vars */]) = 0
 {% endhighlight %}
 The syntax is just `strace [command args]` but a lot additional options are provided:
 
-Option | Explanation
---- | --- 
--e | System call to trace. Only things we care about are the parameters in `execve` systemcall.
--s | Length of line output. `gcc` command is extremly long and by default it will be trancated.
--f | Trace child processes as they are created by currently traced processes.
--o | Dump result to a file.
+Option | Explanation |
+------ | ----------- |
+-e     | System call to trace. Only things we care about are the parameters in `execve` systemcall. | 
+-s     | Length of line output. `gcc` command is extremly long and by default it will be trancated. |
+-f     | Trace child processes as they are created by currently traced processes. |
+-o     | Dump result to a file. |
 
 To know more about strace, just read the man page and ["strace Wow Much Syscall " by Brendan Gregg](http://www.brendangregg.com/blog/2014-05-11/strace-wow-much-syscall.html)
 
