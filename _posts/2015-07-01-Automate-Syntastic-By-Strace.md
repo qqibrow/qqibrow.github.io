@@ -31,13 +31,20 @@ Options
 -f | > Trace child processes as they are created by currently traced processes.
 -o | dump result to a file.
 
+To know more about strace, just read the man page and [the one by Brendan Gregg](http://www.brendangregg.com/blog/2014-05-11/strace-wow-much-syscall.html)
+
 With the powerful `strace`, we could have a two-line solution that meet our basic requirements:
 {% highlight bash %}
-
+strace -eexecve -s 200 -o output -f make
+perl -ne 'while(m/(-I.*?)",/g) {print "$1\n";}' output | sort | uniq > .syntastic_cpp_config
 {% endhighlight %}
-
+About the regex, here is a sample [example](https://regex101.com/r/wG9pQ7/1), the key is to use non-greedy match and lookahead assertion.
 
 ## Improve
+One problem is there are sometimes relative path in Makefile in subdirectories. To overcome this, we trace `getcwd` systemcall as well and map them to `execve` tracing result based on pid. The final solution is in python and provided [here](https://github.com/qqibrow/autoSyntastic). The usage is pretty simple, instead of running `make`, run `autosyntastic make` and a `.syntastic_cpp_config` will show up in the current directory.
 
-## Conclusion
+One importatn thing to know is strace will significantly slow down the performance. Therefore, I suggest run autosyntastic only during setup.
 
+## Final words
+Tracing is very interesting and a lot of fun. I introduced perf and systemtap before, which are also powerful tracking tools. I feel with learning of different tracking tools, I could gradually understand performance better, understand programming better and even understand kernel better. With the comming of Linux 4.0, more and more tracing tools and apis will be available. Well, more to learn and long way to the top!
+![it's a long way to the top by AC DC](http://www.acdccollector.com/itsalongwayukdvd1.jpg)
