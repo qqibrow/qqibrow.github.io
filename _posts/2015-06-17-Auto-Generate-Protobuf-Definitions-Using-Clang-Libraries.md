@@ -39,7 +39,7 @@ The first method came to my mind is regular expression. Suppose in the code ther
 However, using regex is just like doing a part what compiler is doing and it’s not extensible. If we have recursive typedef `typedef xxx int; typedef xxx yyy;` or we want to use constumize definitions in protobuf message  `Message Stock {required message Company;}`, it will be more difficult to analyze the code. 
 
 ## Reflection
-Another way to go is reflection. [Reflection is the ability to inspect classes and dynamically call classes and functions.](http://stackoverflow.com/questions/37628/what-is-reflection-and-why-is-it-useful) it could help with questions like “what are all the fields class Foo has? is their a method doFoo in class Foo? and what is the root class of class Foo. Here is an toy example using java:
+Another way to go is reflection. [Reflection is the ability to inspect classes and dynamically call classes and functions.](http://stackoverflow.com/questions/37628/what-is-reflection-and-why-is-it-useful) it could help with questions like “what are all the fields class Foo has", "is their a method doFoo in class Foo" or "what is the root class of class Foo". Here is an toy example using java:
 
 {% highlight java %}
 package com.example;
@@ -66,7 +66,7 @@ public class Main {
 // double, b
 // String, c
 {% endhighlight %}
-The whole thing could be suprisingly simple in Java, but unfortunately, I am using C++. Unlike java or python, C++ doesn’t provide native support for reflection(why? short answer. required big change and not top priority. [checkout this](http://stackoverflow.com/questions/359237/why-does-c-not-have-reflection) ) There are [ ways to use reflection](http://stackoverflow.com/questions/41453/how-can-i-add-reflection-to-a-c-application). One of them is boost::type_traits and it requires a refactor of code using this feature. That’s doable but personally I think that’s even difficulty than the regex solution. You have to learn one additional libraries and also have to be very careful when it comes to dependencies between classes. 
+The whole thing could be suprisingly simple in Java, but unfortunately, I am using C++. Unlike java or python, C++ doesn’t provide native support for reflection(why? short answer: it requires big change and is not top priority. [checkout this](http://stackoverflow.com/questions/359237/why-does-c-not-have-reflection) ) There are [ ways to use reflection](http://stackoverflow.com/questions/41453/how-can-i-add-reflection-to-a-c-application). One of them is boost::type_traits and it requires a big refactor of code using this feature. That’s doable but personally I think that’s even difficulty than the regex solution. You have to learn one additional libraries and also have to be very careful when it comes to dependencies between classes. 
 ## Clang AST
 
 Clang AST provide compiler level APIs to explore C++ classes and functions. It is much much more difficult than I expected, but I learnt a lot in this journey.
