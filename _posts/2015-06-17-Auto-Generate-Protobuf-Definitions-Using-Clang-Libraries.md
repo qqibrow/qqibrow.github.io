@@ -34,7 +34,7 @@ This brings up a very interesting question: is there a way to auto generate thes
 ## Regular Expression
 The first method came to my mind is regular expression. Suppose in the code there are two kinds of syntax to define a struct.
 `struct Stock {}` or `typedef struct {} Stock`, we could use regex to extract the struct definition and then do a simple replacement. [demo link](https://regex101.com/r/zP0nB8/2)
-![my-dev-screenshot]({{ site.baseurl }}/images/regex_parse_class.png)
+![regex parse class]({{ site.baseurl }}/images/regex_parse_class.png)
        
 However, using regex is just like doing a part what compiler is doing and it’s not extensible. If we have recursive typedef `typedef xxx int; typedef xxx yyy;` or we want to use constumize definitions in protobuf message  `Message Stock {required message Company;}`, it will be more difficult to analyze the code. 
 
@@ -69,10 +69,39 @@ public class Main {
 The whole thing could be suprisingly simple in Java, but unfortunately, I am using C++. Unlike java or python, C++ doesn’t provide native support for reflection(why? short answer: it requires big change and is not top priority. [checkout this](http://stackoverflow.com/questions/359237/why-does-c-not-have-reflection) ) There are [ ways to use reflection](http://stackoverflow.com/questions/41453/how-can-i-add-reflection-to-a-c-application). One of them is boost::type_traits and it requires a big refactor of code using this feature. That’s doable but personally I think that’s even difficulty than the regex solution. You have to learn one additional libraries and also have to be very careful when it comes to dependencies between classes. 
 ## Clang AST
 
-Clang AST provide compiler level APIs to explore C++ classes and functions. It is much much more difficult than I expected, but I learnt a lot in this journey.
+Clang AST provide compiler level APIs to explore C++ classes and functions. Finally I choose this solution mainly because it is similar with Java reflection solution: pure analysis, not a single line change required to the codebase. However, it is much much more difficult than I expected, but I learnt a lot in this journey.
 
 ### A simple taste
-simple example using clang-check
+The idea is pretty simple. Using clang AST to analyze a class, aggregate all fields and print out the class definition in protobuf message format. The first thing is to get familiar with clang AST.  clang provide a tool called `clang-check` which could be used to print out the AST tree. This tool is helpful for both learning and debugging.  We could try to use clang-check to dump the AST  of a simple class.
+
+{% highlight c++ %}
+#include <string>
+using std::string;
+namespace example {
+class Foo {
+    public:
+        Foo();
+        explicit Foo(string);
+        ~Foo();
+    private:
+        string name_;
+};
+}  // namespace example
+
+using namespace std;
+using namespace example;
+
+Foo::Foo() {}
+
+Foo::Foo(string name): name_(name) {}
+
+Foo::~Foo() {}
+{% endhighlight %}
+
+The output is:
+![clang_check_simple_result]({{ site.baseurl }}/images/clang_check_simple_result.png)
+
+From the result, the only thing needs to take care of is the `CXXRecordDecl` cause all the fields are under this declaration. Obversely we need to find out the API to do that.
 ### Output all fields of one class
 code example
 ### recursive type def
