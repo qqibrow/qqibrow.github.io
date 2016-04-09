@@ -1,6 +1,9 @@
 ---
 layout: post
 title: Single Connection redis performance
+description: multiple conenctions to redis is exponentially faster than single conenction due to the magic of async IO
+keywords: redis, redis internal, non-blocking IO
+
 ---
 
 Recently I did an interesting investigation about redis performance. Given the same load, multiple connections to redis could perform 8x faster than single connection(see below). I am not considering pipelining here, and I already tried many optimization approach in my test. (using taskset to make redis running in single core, using unix domain socket)
