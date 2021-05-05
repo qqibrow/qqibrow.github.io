@@ -9,7 +9,7 @@ SystemTap (stap) is both scripting language and tool for profiling program on Li
 
 Stap supports c++ and c. For java, it may support it  from RHEL7 according to [this](http://developerblog.redhat.com/2014/01/10/probing-java-w-systemtap/). The key is the systemtap-runtime-java package, which I don’t see it in RHEL6 repo.(Yeah, I use RHEL6.)
 
-##Install Guide
+## Install Guide
 
 * Make sure utrace is enabled in your OS. By default, RHEL should has this option open. But it’s better to double check.
    ```
@@ -24,11 +24,11 @@ Stap supports c++ and c. For java, it may support it  from RHEL7 according to [t
 sudo stap -e 'probe process("ls").function("main") { printf("hello world!\n"); }' -c ls
 {% endhighlight %}
     
-##Usage Guide
+## Usage Guide
 
 You don’t need to learn stap language very well to use it. There are many good resources on Github. I mainly use scripts from [agentzh](https://github.com/agentzh), who is pretty active on performance tuning using stap. Blow are his two repositories I use:
 
-###[nginx-systemtap-toolkit](https://github.com/openresty/nginx-systemtap-toolkit)
+### [nginx-systemtap-toolkit](https://github.com/openresty/nginx-systemtap-toolkit)
 
 Although this repo is mainly for nginx performance tuning, there are also many for general purpose usage. Here I use the [sample-bt](https://github.com/openresty/nginx-systemtap-toolkit/blob/master/sample-bt) and [sample-bt-off-cpu](https://github.com/openresty/nginx-systemtap-toolkit/blob/master/sample-bt-off-cpu) to generate the [FlameGraph](http://www.brendangregg.com/flamegraphs.html). 
 
@@ -72,7 +72,7 @@ FlameGraph is pretty powerful in performance tuning, since it could give you a o
 2. [Java Flame Graphs](http://www.brendangregg.com/blog/2014-06-12/java-flame-graphs.html)
 
 
-###[stapxx](https://github.com/openresty/stapxx)
+### [stapxx](https://github.com/openresty/stapxx)
 
 stapxx is a macro language built on top of stap, which provide more functionalities and easier to use. For more detail, please review the main page. Here I mainly use the func-latency-distr script. The usage is very clear here.https://github.com/openresty/stapxx#func-latency-distr
 
